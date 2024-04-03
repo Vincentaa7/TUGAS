@@ -1,65 +1,83 @@
-<html>
-    <title>TUGAS 2</title>
-    <head>
-        Penggunaan Method POST dan GET
-    </head>
+<?php
 
-   <body>
-    <h3>gaji karyawan Pt Yanto</h3>
-    <form method="POST" action="tugas.php">
-        
-             <p>Jumlah upah per-jam : <input type="text" name="upah" value=''></p>
-             <p>Jumlah jam kerja : <input type="text" name="jamkerja" value=''></p>
-             <input type="submit"name="submit" value="submit">
-    </form>
-    <?php
-            if(isset($_POST['submit'])) {
-            echo "jumlah upah per jam = Rp.", $_POST['upah'], '<br>';
-            echo "jumlah jam kerja = ", $_POST['jamkerja'], '<br>';
+function hitunglembur($jamkerja){
+    $jamlembur = $jamkerja - 48;
+    return $jamlembur;
+}
 
-            if ($_POST['jamkerja']>48){
-                $upah = $_POST['upah'] * $_POST['jamkerja'];
-                $waktu_lembur = $_POST['jamkerja'] - 48;
-                $uang_lembur = $waktu_lembur * 0.15 * $_POST['upah'];
-                $total_upah = $upah + $uang_lembur;
-                echo "Jumlah upah total + bonus lembur =", $total_upah,"<br>";
-            } else {
-                $upah = $_POST['upah'] * $_POST['jamkerja'];
-                echo "jam upah total =", $upah, "<br>";
-                }
-            }
+function islembur($jamkerja){
+    if ($jamkerja > 48){
+        return TRUE;    
+    }else {
+        return FALSE;
+    }
+}
+
+function hitunggaji($jamkerja, $upahperjam){
+    $totalgaji = $jamkerja * $upahperjam;
+    return $totalgaji;
+}
+// POST METHOD
+if ($_SERVER ["REQUEST_METHOD"] == "POST" )
+{
+    $jamkerja = htmlspecialchars ($_POST['jamkerja']);
+    $upahperjam = htmlspecialchars ($_POST['upahperjam']);
+    $jamlembur = hitunglembur ($jamkerja);
+
+    echo "Jam kerja : " . $jamkerja . "</br>";
+    echo "Upah per jam : " . $upahperjam . "</br>";
+
+    $upahlembur = 0.15 * $upahperjam;
+
+    if (islembur($jamkerja)) {
+        $jamlembur = hitunglembur ($jamkerja);
+        $gajilembur = hitunggaji ($jamlembur, $upahlembur) + hitunggaji($jamlembur, $upahperjam);
+        $gajinormal = hitunggaji (48, $upahperjam);
+        $gajitotal = $gajilembur + $gajinormal;
+
+    }else {
+        $gajinormal = hitunggaji($jamkerja, $upahperjam);
+        $gajitotal = $gajinormal;
+        $jamlembur = 0;
+        $gajilembur = 0;
+    }
+    echo "Jam lembur : " . $jamlembur . "<br>";
+    echo "Gaji normal : " . $gajinormal. "<br>";
+    echo "Gaji lembur : " . $gajilembur. "<br>";
+    echo "Gaji total : " . $gajitotal . "<br>";
+    }
+     
+    // GET METHOD
+else if ($_SERVER ["REQUEST_METHOD"] == "GET" ) {
+    $jamkerja = htmlspecialchars ($_GET['jamkerja']);
+    $upahperjam = htmlspecialchars ($_GET['upahperjam']);
+    $jamlembur = hitunglembur ($jamkerja);
+
+    echo "Jam kerja : " . $jamkerja . "</br>";
+    echo "Upah per jam : " . $upahperjam . "</br>";
+
+
+    $upahlembur = 0.15 * $upahperjam;
+
+    if (islembur($jamkerja)) {
+        $jamlembur = hitunglembur ($jamkerja);
+        $gajilembur = hitunggaji ($jamlembur, $upahlembur) + hitunggaji($jamlembur, $upahperjam);
+        $gajinormal = hitunggaji (48, $upahperjam);
+        $gajitotal = $gajilembur + $gajinormal;
+
+    }else {
+        $gajinormal = hitunggaji($jamkerja, $upahperjam);
+        $gajitotal = $gajinormal;
+        $jamlembur = 0;
+        $gajilembur = 0;
+    }
+    echo "Jam lembur : " . $jamlembur . "<br>";
+    echo "Gaji normal : " . $gajinormal. "<br>";
+    echo "Gaji lembur : " . $gajilembur. "<br>";
+    echo "Gaji total : " . $gajitotal . "<br>";
+}
+    else {
+        ("location: index.html");
+        exit;
+ }
     ?>
-    <br><br>
-    <hr>
-
-    <h3>gaji karyawan Pt Yanto</h3>
-    <form method="GET" action="tugas.php">
-        
-             <p>Jumlah upah per-jam : <input type="text" name="upah" value=''></p>
-             <p>Jumlah jam kerja : <input type="text" name="jamkerja" value=''></p>
-             <input type="submit"name="submit" value="submit">
-    </form>
-    <?php
-            if(isset($_GET['submit'])) {
-            echo "jumlah upah per jam = Rp.", $_GET['upah'], '<br>';
-            echo "jumlah jam kerja = ", $_GET['jamkerja'], '<br>';
-
-            if ($_GET['jamkerja']>48){
-                $upah = $_GET['upah'] * $_GET['jamkerja'];
-                $waktu_lembur = $_GET['jamkerja'] - 48;
-                $uang_lembur = $waktu_lembur * 0.15 * $_GET['upah'];
-                $total_upah = $upah + $uang_lembur;
-                echo "Jumlah upah total + bonus lembur =", $total_upah,"<br>";
-            } else {
-                $upah = $_GET['upah'] * $_GET['jamkerja'];
-                echo "jam upah total =", $upah, "<br>";
-                }
-            }
-    ?>
-    <br><br>
-    <hr>
-
-
-   </body>
-</html>
-
